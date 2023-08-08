@@ -1,0 +1,154 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 97vh;
+  font-family: Arial, sans-serif;
+  background: #404a4c;
+}
+
+#app {
+  display: grid;
+  place-items: center;
+}
+
+/* Styling for all forms (login, signup, reset password) */
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  border-radius: 10px;
+  box-shadow: 0 0 5px 0 #fff;
+  min-height: 400px;
+  color: #fff;
+}
+
+.form-left-img-container {
+  min-width: 250px;
+  max-width: 320px;
+  height: auto;
+  position: relative;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px 0 0 10px;
+}
+
+.img-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #000;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 30px 30px 30px 20px;
+  border-radius: 0 10px 10px 0;
+}
+
+h1 {
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.password-field-container {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-radius: 5px;
+  /* padding: 1px; */
+  /* position: relative; */
+}
+
+.password-field-container>input {
+  width: 90%;
+  border: 0;
+}
+
+.fa-eye,
+.fa-eye-slash {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.error-msg {
+  text-align: left;
+  margin: -1px 0;
+  font-size: smaller;
+  color: #FF2400;
+  letter-spacing: 0.5px;
+}
+
+.link {
+  color: #eee;
+  cursor: pointer;
+  text-decoration: none;
+  transition: letter-spacing 0.2s ease-in-out;
+}
+
+.link:hover {
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+}
+
+/* The base styles for the button */
+input[type='submit'] {
+  background: #0e0f11;
+  color: #fff;
+  border: none;
+  align-self: flex-end;
+  padding: 10px 35px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+input[type='submit']:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 3px 0 #fff;
+}
+
+input[type='submit']:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+p {
+  color: #ccc;
+}
