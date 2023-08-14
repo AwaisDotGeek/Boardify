@@ -1,64 +1,66 @@
 <template>
-    <div class="container">
-            <div class="form-left-img-container">
-                <img src="./assets/bg.png" alt="">
-                <div class="img-shadow"></div>
-            </div>
-            <div class="form-container">
-                <form action="" @submit.prevent="validateData">
+    <div class="main">
+        <div class="container">
+                <div class="form-left-img-container">
+                    <img src="./assets/bg.png" alt="">
+                    <div class="img-shadow"></div>
+                </div>
+                <div class="form-container">
+                    <form action="" @submit.prevent="validateData">
                     
-                    <h1>Sign up</h1>
+                        <h1>Sign up</h1>
 
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" placeholder="Email here" name="email" v-model="email" autocomplete="email">
-                        <!-- following span element is used to show errors if any -->
-                        <span class="error-msg">{{ emailError }}</span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="username">Username 
-                            <sub style="font-size: small; color: #eee;">
-                                your in-game name
-                            </sub>
-                        </label>
-                        <input type="text" placeholder="Username here" name="username" v-model="username" autocomplete="username">
-                        <span class="error-msg">{{ usernameError }}</span>
-                    </div> 
-                    
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="password-field-container">
-                            <input type="password" placeholder="Password here" name="password1" v-model="password1" autocomplete="new-password">
-                            <i class="fa-regular fa-eye" style="color: #000000;" @click="handleEyeClick"></i>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" placeholder="Email here" name="email" v-model="email" autocomplete="email">
+                            <!-- following span element is used to show errors if any -->
+                            <span class="error-msg">{{ emailError }}</span>
                         </div>
-                    </div>
                     
-                    <div class="form-group">
-                        <label for="password">Repeat Password</label>
-                        <div class="password-field-container">
-                            <input type="password" placeholder="Repeat Password here" name="password2" v-model="password2" autocomplete="new-password">
-                            <i class="fa-regular fa-eye" style="color: #000000;" @click="handleEyeClick"></i>
+                        <div class="form-group">
+                            <label for="username">Username 
+                                <sub style="font-size: small; color: #eee;">
+                                    your in-game name
+                                </sub>
+                            </label>
+                            <input type="text" placeholder="Username here" name="username" v-model="username" autocomplete="username">
+                            <span class="error-msg">{{ usernameError }}</span>
+                        </div> 
+                    
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-field-container">
+                                <input type="password" placeholder="Password here" name="password1" v-model="password1" autocomplete="new-password">
+                                <i class="fa-regular fa-eye" style="color: #000000;" @click="handleEyeClick"></i>
+                            </div>
                         </div>
-                        <span class="error-msg" id="password-error">{{ passwordError }}</span>
-                    </div>
                     
-                    <div class="form-group">
-                        <input type="submit" value="Signup">
-                    </div>
+                        <div class="form-group">
+                            <label for="password">Repeat Password</label>
+                            <div class="password-field-container">
+                                <input type="password" placeholder="Repeat Password here" name="password2" v-model="password2" autocomplete="new-password">
+                                <i class="fa-regular fa-eye" style="color: #000000;" @click="handleEyeClick"></i>
+                            </div>
+                            <span class="error-msg" id="password-error">{{ passwordError }}</span>
+                        </div>
                     
-                    <div class="login-option">
-                        <p>
-                            got an account? 
-                            <RouterLink class="link" to="/login">
-                                Login
-                            </RouterLink>
-                            instead
-                        </p>
-                    </div>
+                        <div class="form-group">
+                            <input type="submit" value="Signup">
+                        </div>
+                    
+                        <div class="login-option">
+                            <p>
+                                got an account? 
+                                <RouterLink class="link" to="/login">
+                                    Login
+                                </RouterLink>
+                                instead
+                            </p>
+                        </div>
 
-                </form>
-            </div>
+                    </form>
+                </div>
+        </div>
     </div>
 </template>
 
@@ -167,7 +169,15 @@
 </script>
 
 <style scoped>
+
+    .main {
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        place-items: center;
+    }
     .form-group {
         margin-bottom: 5px;
     }
+    
 </style>

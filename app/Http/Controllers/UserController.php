@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerification;
+use Illuminate\Auth\Events\Registered;
 
 use App\Models\User;
 
@@ -17,7 +20,6 @@ class UserController extends Controller
     }
 
     function register(Request $request) {
-
         $errors = [];
         $numberOfUsersRegistered = User::count();
 
@@ -26,7 +28,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users'
         ]);
 
-        if($emailValidation->fails()){
+        if ($emailValidation->fails()) {
             $errors['emailError'] = 'This email is already registered! ' . $numberOfUsersRegistered;
         }
 
@@ -35,11 +37,11 @@ class UserController extends Controller
             'name' => 'required|string|max:255|unique:users'
         ]);
 
-        if($nameValidation->fails()){
+        if ($nameValidation->fails()) {
             $errors['usernameError'] = "This username is already taken!";
         }
 
-        if($errors) {
+        if ($errors) {
             return response()->json($errors, 400);
         }
 
@@ -49,11 +51,12 @@ class UserController extends Controller
         ]);
 
         try {
-            $userId = $this -> getUserId($numberOfUsersRegistered);
+            $userId = $this->getUserId($numberOfUsersRegistered);
         } catch (Exception $e) {
             return response()->json(['message' => "Hello World!"]);
         }
 
+        // Create a new user
         $user = User::create([
             'user_id' => $userId,
             'name' => $request->name,
@@ -61,7 +64,13 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json(['message' => "User created Successfully!"], 201);
+        // Trigger email verification notification
+        event(new Registered($user));
+
+        // Send the verification email
+        $user->sendEmailVerificationNotification();
+
+        return response()->json(['message' => "User created successfully! Please check your email for verification."], 201);
     }
 
     function showLoginForm() {

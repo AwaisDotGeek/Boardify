@@ -1,39 +1,41 @@
 <template>
-    <div class="container">
-        <div class="form-left-img-container">
-            <img src="./assets/bg.png" alt="">
-            <div class="img-shadow"></div>
-        </div>
-        <div class="form-container">
-            <form action="" @submit.prevent="validateData">
-                <h1>Login</h1>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" placeholder="email here" v-model="email">
-                    <span class="error-msg">{{ emailError }}</span>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-field-container">
-                        <input type="password" placeholder="password here" v-model="password">
-                        <i class="fa-regular fa-eye" style="color: #000000;" @click="handleEyeClick"></i>
+    <div class="main">
+        <div class="container">
+            <div class="form-left-img-container">
+                <img src="./assets/bg.png" alt="">
+                <div class="img-shadow"></div>
+            </div>
+            <div class="form-container">
+                <form action="" @submit.prevent="validateData">
+                    <h1>Login</h1>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" placeholder="email here" v-model="email">
+                        <span class="error-msg">{{ emailError }}</span>
                     </div>
-                    <span class="error-msg">{{ passwordError }}</span>
-                </div>
-                <div class="form-group">
-                    <RouterLink class="link" to="/reset-password">forgot password ?</RouterLink>
-                    <input type="submit" value="Login">
-                </div>
-                <div class="signup-option">
-                    <p>
-                        don't have account? 
-                        <RouterLink class="link" to="/signup">
-                            Signup
-                        </RouterLink>
-                        now
-                    </p>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-field-container">
+                            <input type="password" placeholder="password here" v-model="password">
+                            <i class="fa-regular fa-eye" style="color: #000000;" @click="handleEyeClick"></i>
+                        </div>
+                        <span class="error-msg">{{ passwordError }}</span>
+                    </div>
+                    <div class="form-group">
+                        <RouterLink class="link" to="/reset-password">forgot password ?</RouterLink>
+                        <input type="submit" value="Login">
+                    </div>
+                    <div class="signup-option">
+                        <p>
+                            don't have account? 
+                            <RouterLink class="link" to="/signup">
+                                Signup
+                            </RouterLink>
+                            now
+                        </p>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -126,6 +128,12 @@
 
 <style scoped>
 
+    .main {
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        place-items: center;
+    }
     .form-group:nth-child(4) {
         display: flex;
         flex-direction: row;

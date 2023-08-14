@@ -1,40 +1,22 @@
 <template>
-    <div class="container">
-            <div class="form-left-img-container">
-                <img src="./assets/bg.png" alt="">
-                <div class="img-shadow"></div>
-            </div>
-            <div class="form-container">
-                <form v-if="!showNewPassword" action="" @submit.prevent="validateEm">
-                    <h1>Reset Password</h1>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" placeholder="Enter your email" v-model="email">
-                        <span class="error-msg">{{ emailError }}</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Check">
-                    </div>
-                    <div class="login-option">
-                        <p>
-                            remember password? 
-                            <RouterLink class="link" to="/login">
-                                Login
-                            </RouterLink>
-                            now
-                        </p>
-                    </div>
-                </form>
-
-                <form v-if="showNewPassword" action="" @submit.prevent="validatePass">
-                    <h1>Reset Password</h1>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input v-model="password" type="text" placeholder="Enter new password">
-                        <span class="error-msg" id="password-error"></span>
-                        <input type="submit" value="Change" style="margin-top: 10px;">
-                    </div>
-                    <div class="login-option">
+    <div class="main">
+        <div class="container">
+                <div class="form-left-img-container">
+                    <img src="./assets/bg.png" alt="">
+                    <div class="img-shadow"></div>
+                </div>
+                <div class="form-container">
+                    <form v-if="!showNewPassword" action="" @submit.prevent="validateEm">
+                        <h1>Reset Password</h1>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" placeholder="Enter your email" v-model="email">
+                            <span class="error-msg">{{ emailError }}</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Check">
+                        </div>
+                        <div class="login-option">
                             <p>
                                 remember password? 
                                 <RouterLink class="link" to="/login">
@@ -43,9 +25,29 @@
                                 now
                             </p>
                         </div>
-                </form>
-            </div>
+                    </form>
+
+                    <form v-if="showNewPassword" action="" @submit.prevent="validatePass">
+                        <h1>Reset Password</h1>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input v-model="password" type="text" placeholder="Enter new password">
+                            <span class="error-msg" id="password-error"></span>
+                            <input type="submit" value="Change" style="margin-top: 10px;">
+                        </div>
+                        <div class="login-option">
+                                <p>
+                                    remember password? 
+                                    <RouterLink class="link" to="/login">
+                                        Login
+                                    </RouterLink>
+                                    now
+                                </p>
+                            </div>
+                    </form>
+                </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -135,5 +137,11 @@
     }
 </script>
 
-<style>
+<style scoped>
+    .main {
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        place-items: center;
+    }
 </style>
