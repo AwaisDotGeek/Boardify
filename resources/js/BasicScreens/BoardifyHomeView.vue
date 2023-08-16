@@ -1,31 +1,10 @@
 <template>
     <!-- Nav here -->
     <header>
-        <nav>
-
-            <div class="logo-container">
-                <div class="logo-img-container">
-                    <img src="./assets/logo.png" alt="logo" class="logo-img">
-                </div>
-                <h2 class="logo-text">Boardify</h2>
-            </div>
-
-            <div class="nav-links-container">
-                <ul class="nav-links">
-                    <li class="nav-link-item"><RouterLink to="" class="link">Home</RouterLink></li>
-                    <span class="nav-link-separater">|</span>
-                    <li class="nav-link-item"><RouterLink to="" class="link">Products</RouterLink></li>
-                    <span class="nav-link-separater">|</span>
-                    <li class="nav-link-item"><RouterLink to="" class="link">About</RouterLink></li>
-                    <span class="nav-link-separater">|</span>
-                    <li class="nav-link-item"><RouterLink to="" class="link">Contact</RouterLink></li>
-                </ul>
-            </div>
-        
-        </nav>
+        <Navbar></Navbar>
     </header>
 
-    <GameCard id="chess" gameName="Chess" gameHeadText="Unleash Your Strategic Brilliance!" imgSrc="./assets/chess-medium.jpg">
+    <GameCard id="chess" gameName="Chess" gameHeadText="Unleash Your Strategic Brilliance!">
         <template v-slot:gameText>
             Greetings, noble players! I am Chess, the timeless 
             battleground where minds clash in a symphony of strategy 
@@ -40,7 +19,7 @@
         </template>
     </GameCard>
 
-    <GameCard id="ludo" gameName="Ludo" gameHeadText="Roll the Dice, Create Memories, and Seize Victory!" imgSrc="./assets/chess-medium.jpg">
+    <GameCard id="ludo" gameName="Ludo" gameHeadText="Roll the Dice, Create Memories, and Seize Victory!">
         <template v-slot:gameText>
             Greetings, adventurers of all ages! I am Ludo, 
             the timeless classic that brings joy, camaraderie, 
@@ -58,18 +37,56 @@
         </template>
     </GameCard>
 
-    <MyFooter></MyFooter>
+    <GameCard id="rang" gameName="Rang" gameHeadText="Experience the Colors of Strategy and Skill!">
+        <template v-slot:gameText>
+            Greetings, strategic thinkers and card game enthusiasts! I am Rang,
+            a captivating card game that combines intellect, foresight, and
+            quick decision-making. Engage in a battle of wits as you aim to
+            capture tricks and outmaneuver your opponents. Every card played
+            is a brushstroke of strategy, every move a stroke of mastery.
+            With each round, the canvas of possibilities expands, creating
+            intricate patterns of gameplay that challenge your skills.
+            Whether you're devising a winning strategy or embracing the thrill
+            of unpredictability, Rang promises a vibrant tapestry of
+            challenge and excitement. Join me, and let's immerse ourselves
+            in a world where every card has a story, and every play a stroke
+            of brilliance. 🃏🎨🏆
+        </template>
+    </GameCard>
+
+    <GameCard id="snakes-and-ladders" gameName="Snakes and Ladders" gameHeadText="Climb, Slide, and Chase Victory's Heights!">
+        <template v-slot:gameText>
+            Greetings, adventurers and seekers of ups and downs! I am Snakes and Ladders,
+            the thrilling journey that propels you through twists and turns, surprises
+            and setbacks. Ascend the ladder of luck and descend the snake of chance as
+            you navigate a board of squares and serpents. Every roll of the dice holds
+            the promise of progress or the plunge of a snake's tail. Strategy and fortune
+            dance in harmony as you strive to reach the zenith of victory.
+            With every roll, friendships are forged, and rivalries ignited, making each
+            play a memorable saga of shared experiences. Whether you're seeking to conquer
+            your rivals or reveling in the unpredictable ride, Snakes and Ladders promises
+            an exhilarating ride of anticipation and elation. Join me, and let's embark on
+            a voyage of chutes and ladders, where the destination is uncertain, but the
+            thrill is guaranteed! 🎲🐍🪜
+        </template>
+    </GameCard>
+
+
+    <Footer></Footer>
     
 </template>
 
 <script>
-    import MyFooter from "./components/MyFooter.vue";
+    import Footer from "./components/Footer.vue";
     import GameCard from "./components/GameCard.vue";
+    import Navbar from './components/Navbar.vue';
     export default {
         components: {
-            MyFooter,
+            Footer,
             GameCard,    
-        }    
+            Navbar,
+        },
+            
     }
 </script>
 
@@ -78,62 +95,5 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-    }   
-
-    /* Navbar */
-    nav {
-        width: 100%;
-        background: #212b2a;
-        padding: 10px 8%;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* Logo */
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .logo-img-container {
-        width: 50px;
-        height: 50px;
-    }
-
-    .logo-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-    .logo-text {
-        color: #eee;
-        letter-spacing: 1px;
-    }
-
-    /* Nav-links */
-    .nav-links {
-        display: flex;
-        gap: 15px;
-    }
-
-    .nav-link-item {
-        list-style-type: none; 
-    }
-
-    .nav-link-separater {
-        color: #ccc;
-    }
-    
-
-   @media (max-width: 767px) {
-        nav {
-            padding: 10px 3%;
-        }
-   }
-
+    }  
 </style>

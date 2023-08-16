@@ -1,7 +1,7 @@
 <template>
     <section :id="id" class="game-section">
         <div class="game-img-container">
-            <img src="../assets/chess.jpg" alt="" class="game-img">
+            <img :src="getImgSrc" alt="" class="game-img">
         </div>
         <div class="game-details-container">
             <div class="game-text-container">
@@ -19,8 +19,27 @@
 </template>
 
 <script>
+    import chessImage from '../assets/chess.jpg';
+    import ludoImage from '../assets/ludo.jpg';
+    import rangImage from '../assets/rang.jpg';
+    import snackers from '../assets/snackers.jpg';
     export default {
-        props: ['id', 'gameName', 'gameHeadText', 'imgSrc'],
+        props: ['id', 'gameName', 'gameHeadText'],
+        computed: {
+            getImgSrc() {
+                switch (this.gameName) {
+                    case 'Chess':
+                        return chessImage;
+                    case 'Ludo':
+                        return ludoImage;
+                    case 'Rang':
+                        return rangImage;
+                    case 'Snakes and Ladders':
+                        return snackers;
+                }
+                return ludoImage;
+            }    
+        }
     }
 </script>
 
