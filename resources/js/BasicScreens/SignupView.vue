@@ -141,7 +141,13 @@
                         password: this.password1,
                     });
 
-                    this.$router.push('/login');
+                    if (response) {
+                        alert(response.data.message);
+                    } else {
+                        alert("Fuck!");
+                    }
+
+                    // this.$router.push('/login');
                 } catch (error) {
                     // alert(response.data.message);
                     // console.log(error.response);

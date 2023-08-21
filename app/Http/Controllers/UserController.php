@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailVerification;
-use Illuminate\Auth\Events\Registered;
+use App\Mail\SendMail;
+use Illuminate\Support\Str;
 
 use App\Models\User;
 
@@ -21,15 +21,14 @@ class UserController extends Controller
 
     function register(Request $request) {
         $errors = [];
-        $numberOfUsersRegistered = User::count();
-
+        
         // validate email
         $emailValidation = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255|unique:users'
         ]);
 
         if ($emailValidation->fails()) {
-            $errors['emailError'] = 'This email is already registered! ' . $numberOfUsersRegistered;
+            $errors['emailError'] = 'This email is already registered! ';
         }
 
         // validate name
@@ -51,10 +50,13 @@ class UserController extends Controller
         ]);
 
         try {
+            $numberOfUsersRegistered = User::count();
             $userId = $this->getUserId($numberOfUsersRegistered);
         } catch (Exception $e) {
             return response()->json(['message' => "Hello World!"]);
         }
+
+        $verificationCode = rand(100000, 999999);
 
         // Create a new user
         $user = User::create([
@@ -62,15 +64,20 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'verification_code' => $verificationCode,
         ]);
 
-        // Trigger email verification notification
-        event(new Registered($user));
-
-        // Send the verification email
-        $user->sendEmailVerificationNotification();
+        Mail::to($user -> email) -> send(new SendMail($user));
 
         return response()->json(['message' => "User created successfully! Please check your email for verification."], 201);
+    }
+
+    function verifyEmailPage() {
+        return view('emails.verifyPage');
+    }
+
+    function verifyEmail() {
+        return view('emails.verifyPage');
     }
 
     function showLoginForm() {

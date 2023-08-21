@@ -9,4 +9,8 @@ class AppController extends Controller
     function boardifyHome(){
         return view('boardifyHome');
     }
+
+    function userProfile(){
+        return view('userProfile');
+    }
 }

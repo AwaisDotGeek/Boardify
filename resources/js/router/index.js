@@ -31,7 +31,17 @@ const router = createRouter({
       path: '/boardify-home',
       name: 'boardify_home',
       component: () => import('../BasicScreens/BoardifyHomeView.vue')
-    }
+    },
+    {
+      path: '/user-profile',
+      name: 'user_profile',
+      component: () => import('../BasicScreens/UserProfileView.vue')
+    },
+    {
+      path: '/verify-email',
+      name: 'verify_email',
+      component: () => import('../BasicScreens/VerifyEmail.vue')
+    },
   ]
 })
 

@@ -75,7 +75,7 @@
         margin-bottom: 5px;
     }
     .game-text {
-        text-align: left;
+        text-align: justify;
         color: #fff;
         font-size: 16.5px;
         letter-spacing: 0.3px;
