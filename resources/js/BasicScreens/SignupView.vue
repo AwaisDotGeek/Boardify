@@ -50,16 +50,28 @@
                     
                         <div class="login-option">
                             <p>
-                                got an account? 
+                                Already have an account?
                                 <RouterLink class="link" to="/login">
-                                    Login
+                                    Log in
                                 </RouterLink>
-                                instead
+                                instead.
                             </p>
                         </div>
 
                     </form>
                 </div>
+        </div>
+        <div class="success-message-container" :class="{'inactive': !isSuccessActive}">
+            <h2>{{ successText }}</h2>
+            <Button @click="changeBtnText()">
+                <template v-slot:btn-value>
+                    {{ buttonText }}
+                </template>
+            </Button>
+        </div>
+        <div :class="{'loader-container': isLoadingActive, 'inactive': !isLoadingActive}">
+            <span class="loader"></span>
+            <h5>Creating Account..</h5>
         </div>
     </div>
 </template>
@@ -67,6 +79,7 @@
 <script>
     /* eslint-disable no-unused-vars */
     import axios from 'axios';
+    import Button from './components/Button.vue';
     export default {
         data() {
             return {
@@ -75,6 +88,11 @@
                 password1: '',
                 password2: '',
 
+                isSuccessActive: false,
+                isLoadingActive: false,
+                buttonText: 'OK',
+                successText: 'Your account has been created. Check your email!',
+
                 /* If there was any errors, following 
                     variables would be used to show error messages */
                 emailError: '',
@@ -82,6 +100,10 @@
                 passwordError: '',
                 passwordErrorShown: false,
             }
+        },
+
+        components: {
+            Button,
         },
 
         methods: {
@@ -134,6 +156,7 @@
 
 
             async submitData() {
+                this.isLoadingActive = true;
                 try {
                     const response = await axios.post('/api/register', {
                         name: this.username,
@@ -142,18 +165,40 @@
                     });
 
                     if (response) {
-                        alert(response.data.message);
-                    } else {
-                        alert("Fuck!");
+
+                        if (response.data.emailError || response.data.usernameError) {
+                            setTimeout(() => {
+                                this.emailError = response.data.emailError;
+                                this.usernameError = response.data.usernameError;
+                                this.isLoadingActive = false;
+                            }, 1500);
+                            return;
+                        }
+
+                        this.isLoadingActive = false;
+                        this.isSuccessActive = true;
+                        setTimeout(() => {
+                            this.isSuccessActive = false;
+
+                            this.$router.push({
+                                name: 'EmailVerification',
+                                params: { user_id: this.formatUserIdToEightDigits(response.data.user.user_id) },
+                            });
+                        }, 5000);
                     }
 
-                    // this.$router.push('/login');
                 } catch (error) {
-                    // alert(response.data.message);
-                    // console.log(error.response);
-                    this.emailError = error.response.data.emailError;
-                    this.usernameError = error.response.data.usernameError;
+                    this.isLoadingActive = false;
+                    // alert(error.message);
                 }
+            },
+
+            formatUserIdToEightDigits(userId) {
+                // Convert the input number to a string and pad it with leading zeros
+                const formattedUserId = String(userId).padStart(8, '0');
+
+                // Ensure the formatted number is at most 8 characters long
+                return formattedUserId.slice(-8);
             },
 
             handleEyeClick(e) {
@@ -168,7 +213,18 @@
                     e.target.classList.remove('fa-eye-slash');
                     e.target.previousSibling.type = "password";
                 }
-            }
+            },
+
+            changeBtnText() {
+                this.buttonText = 'Redirecting to verification page ';
+                setInterval(() => {
+                    this.buttonText += '.';
+                    if (this.buttonText === 'Redirecting to verification page ....') {
+                        this.buttonText = 'Redirecting to verification page ';
+                    }
+                }, 500);
+            },
+
         }
         
     }
@@ -185,5 +241,78 @@
     .form-group {
         margin-bottom: 5px;
     }
+
+    .success-message-container {
+        background: #212b2a;
+        height: 150px;
+        padding: 25px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        justify-content: center;
+        box-shadow: 0 0 10px 0 #fff;
+
+        position: absolute;
+    }
+
+    .inactive {
+        display: none;
+    }
+
+    .success-message-container > h2 {
+        color: #fff;
+    }
     
+    .loader-container {
+        position: absolute;
+        height: 150px;
+        width: 250px;
+        background: #212b2a;
+        box-shadow: 0 0 10px 0 #fff;
+        border-radius: 15px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    h5 {
+        color: #fff;
+    }
+
+    .loader {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: inline-block;
+        border-top: 4px solid #FFF;
+        border-right: 4px solid transparent;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+    }
+    .loader::after {
+        content: '';  
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border-left: 4px solid #FF3D00;
+        border-bottom: 4px solid transparent;
+        animation: rotation 0.5s linear infinite reverse;
+    }
+    
+    @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    } 
 </style>

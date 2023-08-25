@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\VerificationController;
 
 Route::get('/', function () {
     return view('home');
@@ -10,7 +11,7 @@ Route::get('/', function () {
 
 // get :: UserController
 Route::get('/signup', [UserController::class, 'signup']);
-Route::get('/verify-email', [UserController::class, 'verifyEmailPage']);
+Route::get('/verify-email', [VerificationController::class, 'verifyEmailPage']) -> name('verifyPage');
 
 Route::get('/login', [UserController::class, 'showLoginForm']);
 

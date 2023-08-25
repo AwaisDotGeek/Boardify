@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/check-email', [UserController::class, 'checkEmailExistance']);
 Route::post('/reset-password', [UserController::class, 'resetPassword']);
+Route::post('/verify-email', [VerificationController::class, 'verifyEmail']);

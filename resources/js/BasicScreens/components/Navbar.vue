@@ -91,6 +91,7 @@
     .nav-user-profile {
         width: 35px;
         height: 35px;
+        cursor: pointer;
     }
 
     .nav-user-profile > img {

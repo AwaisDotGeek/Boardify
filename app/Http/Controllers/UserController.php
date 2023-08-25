@@ -29,6 +29,17 @@ class UserController extends Controller
 
         if ($emailValidation->fails()) {
             $errors['emailError'] = 'This email is already registered! ';
+
+            // check if user with the given email is present but has not verified email
+            // $user = User::where('email', $request -> email)->first();
+            // if ($user) {
+            //     $errors['email_verified'] = $user -> email_verified;
+            //     $user -> verification_code = rand(100000, 999999);
+            //     $user -> save();
+            //     $errors['user'] = $user;
+
+            //     Mail::to($user -> email)->send(new SendMail($user));
+            // }
         }
 
         // validate name
@@ -41,7 +52,7 @@ class UserController extends Controller
         }
 
         if ($errors) {
-            return response()->json($errors, 400);
+            return response()->json($errors, 201);
         }
 
         // validate password
@@ -69,15 +80,7 @@ class UserController extends Controller
 
         Mail::to($user -> email) -> send(new SendMail($user));
 
-        return response()->json(['message' => "User created successfully! Please check your email for verification."], 201);
-    }
-
-    function verifyEmailPage() {
-        return view('emails.verifyPage');
-    }
-
-    function verifyEmail() {
-        return view('emails.verifyPage');
+        return response()->json(['message' => "Please check your email for verification.", 'user' => $user], 201);
     }
 
     function showLoginForm() {
@@ -90,10 +93,15 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
-            // Authentication passed...
-            // return response()->json(['message' => "Hello!"]);
-            return redirect()->intended('/');
+        $user = User::where('email', $request -> email)->first();
+        if($user) {
+            if(!$user -> email_verified) {
+                return response()->json(['email_verified' => false]);
+            } else {
+                if (Auth::attempt($credentials, $request->remember)) {
+                    return redirect()->intended('/boardify-home');
+                }
+            }
         }
 
         // Authentication failed...

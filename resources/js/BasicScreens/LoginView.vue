@@ -37,22 +37,40 @@
                 </form>
             </div>
         </div>
+
+        <MessageCard :msgText="msgText" :btnText = "btnText" :isMsgCardActive = "isMsgCardAcive"></MessageCard>
+        <LoaderCard :loaderText = "'Loading'" :isLoaderCardAcive = "isLoaderCardAcive"></LoaderCard>
     </div>
 </template>
 
 <script>
     import axios from 'axios';
+    import MessageCard from './components/MessageCard.vue';
+    import LoaderCard from './components/LoaderCard.vue';
     export default {
+        components: {
+            MessageCard,
+            LoaderCard,
+        },    
         data() {
             return {
                 email: '',
                 password: '',
 
+                // Msg Card
+                btnText: 'OK',
+                msgText: "",
+                isMsgCardAcive: false,
+
+                // Loader Card
+                loaderText: "Loading ...",
+                isLoaderCardAcive: true,
+
                 emailError: '',
                 passwordError: '',
             } 
         },
-    methods: {
+        methods: {
             validateData() {
                 this.validateEmail(this.email);
                 this.validatePassword(this.password);
@@ -90,19 +108,25 @@
                         password: this.password,
                     });
 
-                    // console.log(response);
-
-                    try {
+                    if (response) {
                         if (response.data.message) {
                             this.passwordError = response.data.message;
-                            return;
+                        } else if (!response.data.email_verified) {
+                            alert("Your email is not verified!");
                         }
-                    } catch (error) {
-                        console.log(error);
-                        return;
                     }
 
-                    this.$router.push('/');
+                    // try {
+                    //     if (response.data.message) {
+                    //         this.passwordError = response.data.message;
+                    //         return;
+                    //     }
+                    // } catch (error) {
+                    //     console.log(error);
+                    //     return;
+                    // }
+
+                    // this.$router.push('/');
                 } catch (error) {
                     console.log(error.response.data);
                 }
