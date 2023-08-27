@@ -61,18 +61,8 @@
                     </form>
                 </div>
         </div>
-        <div class="success-message-container" :class="{'inactive': !isSuccessActive}">
-            <h2>{{ successText }}</h2>
-            <Button @click="changeBtnText()">
-                <template v-slot:btn-value>
-                    {{ buttonText }}
-                </template>
-            </Button>
-        </div>
-        <div :class="{'loader-container': isLoadingActive, 'inactive': !isLoadingActive}">
-            <span class="loader"></span>
-            <h5>Creating Account..</h5>
-        </div>
+        <MessageCard :msgText="msgText" :msgText2="msgText2" :isMsgCardActive="isMsgCardActive"></MessageCard>
+        <LoaderCard :loaderText="loaderText" :isLoaderCardActive="isLoaderCardActive"></LoaderCard>
     </div>
 </template>
 
@@ -80,7 +70,15 @@
     /* eslint-disable no-unused-vars */
     import axios from 'axios';
     import Button from './components/Button.vue';
+    import MessageCard from './components/MessageCard.vue';
+    import LoaderCard from './components/LoaderCard.vue';
+    
     export default {
+        components: {
+            Button,
+            MessageCard,
+            LoaderCard,
+        },    
         data() {
             return {
                 email: '',
@@ -88,10 +86,14 @@
                 password1: '',
                 password2: '',
 
-                isSuccessActive: false,
-                isLoadingActive: false,
-                buttonText: 'OK',
-                successText: 'Your account has been created. Check your email!',
+                // Msg Card
+                msgText: '',
+                msgText2: "",
+                isMsgCardActive: false,
+
+                // Loader Card
+                loaderText: "",
+                isLoaderCardActive: false,
 
                 /* If there was any errors, following 
                     variables would be used to show error messages */
@@ -100,10 +102,6 @@
                 passwordError: '',
                 passwordErrorShown: false,
             }
-        },
-
-        components: {
-            Button,
         },
 
         methods: {
@@ -156,7 +154,10 @@
 
 
             async submitData() {
-                this.isLoadingActive = true;
+                // Show Loader
+                this.loaderText = "Creating account";
+                this.isLoaderCardActive = true;
+
                 try {
                     const response = await axios.post('/api/register', {
                         name: this.username,
@@ -170,26 +171,31 @@
                             setTimeout(() => {
                                 this.emailError = response.data.emailError;
                                 this.usernameError = response.data.usernameError;
-                                this.isLoadingActive = false;
+                                this.isLoaderCardActive = false;
                             }, 1500);
                             return;
                         }
 
-                        this.isLoadingActive = false;
-                        this.isSuccessActive = true;
-                        setTimeout(() => {
-                            this.isSuccessActive = false;
+                        this.isLoaderCardActive = false;
 
+                        // Show msg card
+                        this.msgText = "Account has been created, please verify your email";
+                        this.msgText2 = "Redirecting you to email verification";
+                        this.isMsgCardActive = true;
+
+                        setTimeout(() => {
+                            this.isMsgCardActive = false;
+                    
                             this.$router.push({
                                 name: 'EmailVerification',
-                                params: { user_id: this.formatUserIdToEightDigits(response.data.user.user_id) },
+                                params: { user_id: response.data.user_id },
                             });
-                        }, 5000);
+                        }, 3500);
                     }
 
                 } catch (error) {
-                    this.isLoadingActive = false;
-                    // alert(error.message);
+                    this.isLoaderCardActive = false;
+                    this.isMsgCardActive = false;
                 }
             },
 
@@ -213,16 +219,6 @@
                     e.target.classList.remove('fa-eye-slash');
                     e.target.previousSibling.type = "password";
                 }
-            },
-
-            changeBtnText() {
-                this.buttonText = 'Redirecting to verification page ';
-                setInterval(() => {
-                    this.buttonText += '.';
-                    if (this.buttonText === 'Redirecting to verification page ....') {
-                        this.buttonText = 'Redirecting to verification page ';
-                    }
-                }, 500);
             },
 
         }
@@ -306,7 +302,7 @@
         border-bottom: 4px solid transparent;
         animation: rotation 0.5s linear infinite reverse;
     }
-    
+
     @keyframes rotation {
         0% {
             transform: rotate(0deg);

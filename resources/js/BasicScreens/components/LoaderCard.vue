@@ -1,13 +1,13 @@
 <template>
-    <div :class="{ 'loader-container': this.isLoaderCardActive, 'inactive': !this.isLoaderCardActive  }">
+    <div :class="{ 'loader-container': isLoaderCardActive, 'inactive': !isLoaderCardActive  }">
         <span class="loader"></span>
-        <h5>{{ loaderText }}..</h5>
+        <h5>{{ loaderText }}</h5>
     </div>
 </template>
 
 <script>
     export default {
-        props: ['loaderText', 'isLoaderCardActive'],    
+        props: ['loaderText', 'isLoaderCardActive'],   
     }
 </script>
 
@@ -20,7 +20,7 @@
         position: absolute;
         height: 150px;
         width: 250px;
-        background: #000;
+        background: #212b2a;
         box-shadow: 0 0 10px 0 #fff;
         border-radius: 15px;
 

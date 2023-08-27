@@ -64,7 +64,7 @@ class UserController extends Controller
             $numberOfUsersRegistered = User::count();
             $userId = $this->getUserId($numberOfUsersRegistered);
         } catch (Exception $e) {
-            return response()->json(['message' => "Hello World!"]);
+            return response()->json(['message' => "From UserController line 67"]);
         }
 
         $verificationCode = rand(100000, 999999);
@@ -80,7 +80,7 @@ class UserController extends Controller
 
         Mail::to($user -> email) -> send(new SendMail($user));
 
-        return response()->json(['message' => "Please check your email for verification.", 'user' => $user], 201);
+        return response()->json(['message' => "Please check your email for verification.", 'user' => $user, 'user_id' => $userId], 201);
     }
 
     function showLoginForm() {
@@ -95,13 +95,7 @@ class UserController extends Controller
 
         $user = User::where('email', $request -> email)->first();
         if($user) {
-            if(!$user -> email_verified) {
-                return response()->json(['email_verified' => false]);
-            } else {
-                if (Auth::attempt($credentials, $request->remember)) {
-                    return redirect()->intended('/boardify-home');
-                }
-            }
+            return response() -> json(['user_id' => $user -> user_id,'email_verified' => $user -> email_verified]);
         }
 
         // Authentication failed...

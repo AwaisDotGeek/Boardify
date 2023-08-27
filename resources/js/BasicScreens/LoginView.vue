@@ -23,7 +23,7 @@
                     </div>
                     <div class="form-group">
                         <RouterLink class="link" to="/reset-password">forgot password ?</RouterLink>
-                        <input type="submit" value="Login">
+                        <input type="submit" value="Login" :disabled = isLoginBtnDisabled>
                     </div>
                     <div class="signup-option">
                         <p>
@@ -38,8 +38,8 @@
             </div>
         </div>
 
-        <MessageCard :msgText="msgText" :btnText = "btnText" :isMsgCardActive = "isMsgCardAcive"></MessageCard>
-        <LoaderCard :loaderText = "'Loading'" :isLoaderCardAcive = "isLoaderCardAcive"></LoaderCard>
+        <MessageCard :msgText="msgText" :msgText2="msgText2" :isMsgCardActive="isMsgCardAcive"></MessageCard>
+        <LoaderCard :loaderText="loaderText" :isLoaderCardActive="isLoaderCardActive"></LoaderCard>
     </div>
 </template>
 
@@ -56,15 +56,16 @@
             return {
                 email: '',
                 password: '',
+                isLoginBtnDisabled: false,
 
                 // Msg Card
-                btnText: 'OK',
-                msgText: "",
+                msgText: '',
+                msgText2: "",
                 isMsgCardAcive: false,
 
                 // Loader Card
-                loaderText: "Loading ...",
-                isLoaderCardAcive: true,
+                loaderText: "",
+                isLoaderCardActive: false,
 
                 emailError: '',
                 passwordError: '',
@@ -102,6 +103,10 @@
             },
 
             async submitData() {
+                this.isLoginBtnDisabled = true;
+                this.loaderText = "Checking Account";
+                this.isLoaderCardActive = true;
+
                 try {
                     const response = await axios.post('/login', {
                         email: this.email,
@@ -112,19 +117,34 @@
                         if (response.data.message) {
                             this.passwordError = response.data.message;
                         } else if (!response.data.email_verified) {
-                            alert("Your email is not verified!");
+                            setTimeout(() => {
+                                this.isLoaderCardActive = false;
+                                this.msgText = "We have sent you an email with a verification code";
+                                this.msgText2 = "Redirecting you to verification page";
+                                this.isMsgCardAcive = true;
+
+                                let userId = response.data.user_id.toString().padStart(8, '0');
+                                this.sendVerificationCode(userId);
+                                setTimeout(() => {
+                                    this.$router.push({
+                                        name: 'EmailVerification',
+                                        params: { user_id: userId }
+                                    });
+                                }, 2500);
+                            }, 1500);
+                        } else {
+                            setTimeout(() => {
+                                this.isLoaderCardActive = false;
+                                this.msgText = "Login Successful";
+                                this.msgText2 = "Redirecting to home";
+                                this.isMsgCardAcive = true;
+                            }, 1000);
+                            setTimeout(() => {
+                                this.isMsgCardAcive = false;
+                                this.$router.push('/boardify-home');
+                            }, 2500);
                         }
                     }
-
-                    // try {
-                    //     if (response.data.message) {
-                    //         this.passwordError = response.data.message;
-                    //         return;
-                    //     }
-                    // } catch (error) {
-                    //     console.log(error);
-                    //     return;
-                    // }
 
                     // this.$router.push('/');
                 } catch (error) {
@@ -143,6 +163,16 @@
                     e.target.classList.add('fa-eye');
                     e.target.classList.remove('fa-eye-slash');
                     e.target.previousSibling.type = "password";
+                }
+            },
+
+            async sendVerificationCode(userId) {
+                try {
+                    const response = await axios.post('/api/get-another-code', {
+                        userId: userId,
+                    });
+                } catch (error) {
+                    alert(error);
                 }
             }
             

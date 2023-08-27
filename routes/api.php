@@ -24,3 +24,4 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/check-email', [UserController::class, 'checkEmailExistance']);
 Route::post('/reset-password', [UserController::class, 'resetPassword']);
 Route::post('/verify-email', [VerificationController::class, 'verifyEmail']);
+Route::post('/get-another-code', [VerificationController::class, 'getAnotherCode']);
