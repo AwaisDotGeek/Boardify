@@ -33,7 +33,7 @@ class VerificationController extends Controller
         }
     }
 
-    function getAnotherCode(Request $request) {
+    function getVerificationCode(Request $request) {
         $user = User::find($request -> userId);
         $verificationCode = rand(000000, 999999);
         $user -> verification_code = $verificationCode;

@@ -119,7 +119,7 @@ export default {
 
         async requestCode() {
             try {
-                const response = await axios.post('/api/get-another-code', {
+                const response = await axios.post('/api/get-verification-code', {
                     userId: this.user_id,
                 });
                 if (response) {

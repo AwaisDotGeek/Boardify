@@ -168,7 +168,7 @@
 
             async sendVerificationCode(userId) {
                 try {
-                    const response = await axios.post('/api/get-another-code', {
+                    const response = await axios.post('/api/get-verification-code', {
                         userId: userId,
                     });
                 } catch (error) {
