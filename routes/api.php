@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/check-email', [UserController::class, 'checkEmailExistance']);
 Route::post('/reset-password', [UserController::class, 'resetPassword']);
-Route::post('/verify-email', [VerificationController::class, 'verifyEmail']);
+Route::post('/verify-email/{user_id}', [VerificationController::class, 'verifyEmail'])
+    ->where('user_id', '[0-9]{8}');
 Route::post('/get-verification-code', [VerificationController::class, 'getVerificationCode']);

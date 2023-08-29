@@ -1,69 +1,106 @@
 <template>
     <div class="main">
         <div class="container">
-                <div class="form-left-img-container">
-                    <img src="./assets/bg.png" alt="">
-                    <div class="img-shadow"></div>
-                </div>
-                <div class="form-container">
-                    <form v-if="!showNewPassword" action="" @submit.prevent="validateEm">
-                        <h1>Reset Password</h1>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" placeholder="Enter your email" v-model="email">
-                            <span class="error-msg">{{ emailError }}</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Check">
-                        </div>
-                        <div class="login-option">
-                            <p>
-                                remember password? 
-                                <RouterLink class="link" to="/login">
-                                    Login
-                                </RouterLink>
-                                now
-                            </p>
-                        </div>
-                    </form>
+            <div class="form-left-img-container">
+                <img src="./assets/bg.png" alt="">
+                <div class="img-shadow"></div>
+            </div>
 
-                    <form v-if="showNewPassword" action="" @submit.prevent="validatePass">
-                        <h1>Reset Password</h1>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input v-model="password" type="text" placeholder="Enter new password">
-                            <span class="error-msg" id="password-error"></span>
-                            <input type="submit" value="Change" style="margin-top: 10px;">
-                        </div>
-                        <div class="login-option">
-                                <p>
-                                    remember password? 
-                                    <RouterLink class="link" to="/login">
-                                        Login
-                                    </RouterLink>
-                                    now
-                                </p>
-                            </div>
-                    </form>
-                </div>
+            <div class="form-container">
+                <form v-if="!showNewPassword" action="" @submit.prevent="submitForm">
+                    <h1>Reset Password</h1>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" placeholder="Enter your email" v-model="email" :disabled="emailFieldDisabled">
+                        <span class="error-msg">{{ emailError }}</span>
+                    </div>
+                    <div v-if="emailFoundInRecords" class="form-group">
+                        <label for="verification">Verification Code</label>
+                        <input type="text" placeholder="Enter the verification code" v-model="verificationCode">
+                        <span class="error-msg">{{ verificationCodeError }}</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" :value="submitBtnValue">
+                    </div>
+                    <div class="login-option">
+                        <p>
+                            remember password? 
+                            <RouterLink class="link" to="/login">
+                                Login
+                            </RouterLink>
+                            now
+                        </p>
+                    </div>
+                </form>
+
+                <form v-if="showNewPassword" action="" @submit.prevent="validatePass">
+                    <h1>Reset Password</h1>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input v-model="password" type="text" placeholder="Enter new password">
+                        <span class="error-msg" id="password-error"></span>
+                        <input type="submit" value="Change" style="margin-top: 10px;">
+                    </div>
+                    <div class="login-option">
+                        <p>
+                            remember password? 
+                            <RouterLink class="link" to="/login">
+                                Login
+                            </RouterLink>
+                            now
+                        </p>
+                    </div>
+                </form>
+            </div>
         </div>
+        <MessageCard :msgText="msgText" :msgText2="msgText2" :isMsgCardActive="isMsgCardActive"></MessageCard>
+        <LoaderCard :loaderText="loaderText" :isLoaderCardActive="isLoaderCardActive"></LoaderCard>
     </div>
 </template>
 
 <script>
     import axios from 'axios';
+    import MessageCard from './components/MessageCard.vue';
+    import LoaderCard from './components/LoaderCard.vue';
     export default {
+        components: {
+            MessageCard,
+            LoaderCard,
+        },
         data() {
             return {
                 email: '',
                 password: '',
                 emailError: '',
                 passwordErrorShown: '',
-                showNewPassword: false
+                showNewPassword: false,
+
+                verificationCode: '',
+                emailFoundInRecords: false,
+                verificationCodeError: '',
+                submitBtnValue: 'Check',
+                emailFieldDisabled: false,
+                userId: '',
+
+                // Msg Card
+                msgText: '',
+                msgText2: "",
+                isMsgCardActive: false,
+
+                // Loader Card
+                loaderText: "",
+                isLoaderCardActive: false,
             }
         }, 
 
         methods: {
+            submitForm() {
+                if (!this.emailFieldDisabled) {
+                    this.validateEm();
+                } else {
+                    this.validateVerificationCode();
+                }
+            },    
             validateEm() {
                 this.validateEmail(this.email);
                 if (this.emailError.trim() == '') {
@@ -83,16 +120,26 @@
             },
 
             async checkEmailExistance() {
+                this.loaderText = "Looking for Account";
+                this.isLoaderCardActive = true;
                 try {
                     const response = await axios.post('/api/check-email', {
                         email: this.email,
                     });
-                    if (response.data.exists) {
-                        this.showNewPassword = true;
+                    if (response.data.user_id >= 0) {
+                        this.userId = response.data.user_id.toString().padStart(8, '0');
+                        setTimeout(() => {
+                            this.loaderText = 'Account found';
+                        }, 1000);
+                        this.requestCode();
                     } else {
-                        this.emailError = 'Email not found in records!';
+                        setTimeout(() => {
+                            this.isLoaderCardActive = false;
+                            this.emailError = 'Email not found in records!';
+                        }, 1500);
                     }
                 } catch (error) {
+                    this.isLoaderCardActive = false;
                     this.emailError = "An error occured while checking email!";
                     console.log(error);
                 }
@@ -127,12 +174,77 @@
                         password: this.password,
                     });
 
-                    alert(response.data.message);
-                    this.$router.push('/');
+                    this.msgText = "Password changed successfully!";
+                    this.isMsgCardActive = true;
+                    setTimeout(() => {
+                        this.isMsgCardActive = false;
+                        this.$router.push('/login');
+                    }, 1500);
                 } catch (error) {
                     console.log(error);
                 }
-            }
+            },
+
+            async requestCode() {
+                setTimeout(() => {
+                    this.loaderText = 'Sending verification code';
+                }, 3000);
+                try {
+                    const response = await axios.post('/api/get-verification-code', {
+                        userId: this.userId,
+                    });
+                    if (response) {
+                        this.isLoaderCardActive = false;
+                        this.msgText = response.data.message;
+                        this.isMsgCardActive = true;
+                        setTimeout(() => {
+                            this.isMsgCardActive = false;
+                            this.emailFoundInRecords = true;
+                            this.submitBtnValue = 'Verify';
+                            this.emailFieldDisabled = true;
+                            this.isLoaderCardActive = false;
+                        }, 1500);
+                    }
+                } catch (error) {
+                    alert(error);
+                }
+            },
+
+            validateVerificationCode() {
+                const regex = /^\d{1,6}$/;
+                if (this.verificationCode.trim() === '') {
+                    this.verificationCodeError = 'Please enter verification code!';
+                } else if (!regex.test(this.verificationCode)) {
+                    this.verificationCodeError = "Only numbers are allowed! [max -> 6]"
+                } else {
+                    this.verificationCodeError = '';
+                    this.submitVerificationCode();
+                }
+            },
+
+            async submitVerificationCode() {
+                this.loaderText = "Verifying";
+                this.isLoaderCardActive = true;
+                try {
+                    const response = await axios.post('/api/verify-email', {
+                        userId: this.userId,
+                        verificationCode: this.verificationCode,
+                    });
+                    if (response) {
+                        if (!response.data.success) {
+                            this.verificationCodeError = response.data.message;
+                            this.isLoaderCardActive = false;
+                        } else {
+                            setTimeout(() => {
+                                this.isLoaderCardActive = false;
+                                this.showNewPassword = true;
+                            }, 1500);
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            },  
         }
     }
 </script>

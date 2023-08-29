@@ -115,7 +115,11 @@
 
                     if (response) {
                         if (response.data.message) {
-                            this.passwordError = response.data.message;
+                            setTimeout(() => {
+                                this.passwordError = response.data.message;
+                                this.isLoaderCardActive = false;
+                                this.isLoginBtnDisabled = false;
+                            }, 1500);
                         } else if (!response.data.email_verified) {
                             setTimeout(() => {
                                 this.isLoaderCardActive = false;
@@ -141,7 +145,10 @@
                             }, 1000);
                             setTimeout(() => {
                                 this.isMsgCardAcive = false;
-                                this.$router.push('/boardify-home');
+                                this.$router.push({
+                                    name: 'BoardifyHome',
+                                    params: {user_id: '00000000'}
+                                });
                             }, 2500);
                         }
                     }

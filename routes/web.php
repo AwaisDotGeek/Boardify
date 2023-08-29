@@ -18,7 +18,8 @@ Route::get('/login', [UserController::class, 'showLoginForm']);
 Route::get('/reset-password', [UserController::class, 'showResetPassword']);
 
 // get :: App Controller
-Route::get('/boardify-home', [AppController::class, 'boardifyHome']);
+Route::get('/boardify-home/{user_id}', [AppController::class, 'boardifyHome'])
+    ->where('user_id', '[0-9]{8}');
 Route::get('/user-profile', [AppController::class, 'userProfile']);
 
 // post

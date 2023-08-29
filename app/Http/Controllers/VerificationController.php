@@ -19,18 +19,17 @@ class VerificationController extends Controller
 
         $user = User::find($userId);
 
-        if(!$user) {
-            return response() -> json(['success' => false, 'message' => "User not found!"]);
-        }
+        if($user) {
+            if ($user -> verification_code === $verificationCode) {
+                $user -> email_verified = true;
+                $user -> save();
 
-        if ($user -> verification_code === $verificationCode) {
-            $user -> email_verified = true;
-            $user -> save();
-
-            return response() -> json(['success' => true, 'message' => 'Email verified successfully!']);
-        } else {
+                return response() -> json(['success' => true, 'message' => 'Email verified successfully!']);
+            } 
             return response() -> json(['success' => false, 'message' => 'Invalid verification code!']);
         }
+
+        return response() -> json(['success' => false, 'message' => "User not found!"]);
     }
 
     function getVerificationCode(Request $request) {

@@ -93,16 +93,16 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request -> email)->first();
-        if($user) {
-            return response() -> json(['user_id' => $user -> user_id,'email_verified' => $user -> email_verified]);
+        if (Auth::attempt($credentials, true)) {
+            $user = Auth::user();
+            return response()->json([
+                'user_id' => $user->user_id,
+                'email_verified' => $user->email_verified,
+            ]);
         }
 
         // Authentication failed...
         return response()->json(['message' => 'Invalid Email or Password!']);
-
-        // // Authentication failed...
-        // return back()->withInput()->withErrors(['email' => 'Invalid credentials.']);
     }
 
     // function logout() {
@@ -113,8 +113,6 @@ class UserController extends Controller
         return view('resetPassword');
     }
 
-
-    // 
     function getUserId($number) {
         $digitCount = 8; // Assuming you always want 8 digits
         $userId = str_pad($number, $digitCount, '0', STR_PAD_LEFT);
@@ -122,8 +120,11 @@ class UserController extends Controller
     }
 
     function checkEmailExistance(Request $request) {
-        $emailExists = User::where('email', $request -> email) -> exists();
-        return response() -> json(['exists' => $emailExists]);
+        $user = User::where('email', $request -> email) -> first();
+        if($user) {
+            return response() -> json(['user_id' => $user -> user_id], 201);
+        } 
+        return response() -> json(['message' => "Failure!"], 201);
     }
 
     function resetPassword(Request $request) {

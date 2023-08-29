@@ -28,8 +28,8 @@ const router = createRouter({
       component: () => import('../BasicScreens/ResetPassword.vue')
     },
     {
-      path: '/boardify-home',
-      name: 'boardify_home',
+      path: '/boardify-home/:user_id',
+      name: 'BoardifyHome',
       component: () => import('../BasicScreens/BoardifyHomeView.vue')
     },
     {
